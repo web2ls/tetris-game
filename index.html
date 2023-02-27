@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Tetris</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="grid">
+      <canvas id="board" class="game-board"></canvas>
+      <div class="right-column">
+        <div>
+          <h1>TETRIS</h1>
+          <p>Score: <span id="score">0</span></p>
+          <p>Lines: <span id="lines">0</span></p>
+          <p>Level: <span id="level">0</span></p>
+          <canvas id="next" class="next"></canvas>
+        </div>
+        <button onclick="play()" class="play-button">Play</button>
+      </div>
+    </div>
+
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <script src="" async defer></script>
+    <script type="text/javascript" src="constants.js"></script>
+    <script type="text/javascript" src="board.js"></script>
+    <script type="text/javascript" src="piece.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>
