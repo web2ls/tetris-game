@@ -34,12 +34,52 @@ class Board {
     )
   }
 
+  isNotOccupied(x, y) {
+    return this.grid[y] && this.grid[y][x] === 0;
+  }
+
   valid(p) {
     return p.shape.every((row, dy) => {
-      return row.every((value, dx) =>
-        value === 0 ||
-        this.isInsideWalls(p.x + dx, p.y + dy)
-      );
+      return row.every((value, dx) => {
+        let x = p.x + dx;
+        let y = p.y + dy;
+        return value === 0 || (this.isInsideWalls(x, y) && this.isNotOccupied(x, y));
+      });
     });
   }
+
+  freeze() {
+    this.piece.shape.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value > 0) {
+          this.grid[y + this.piece.y][x + this.piece.x] = value;
+        }
+      });
+    });
+    console.table(this.grid);
+  }
+
+  draw() {
+    this.grid.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value > 0) {
+          this.ctx.fillStyle = COLORS[value - 1];
+          this.ctx.fillRect(x, y, 1, 1);
+        }
+      });
+    });
+  }
+
+  drop() {
+    let p = moves[KEY.DOWN](this.piece);
+
+    if (this.valid(p)) {
+      this.piece.move(p);
+    } else {
+      this.freeze();
+      this.piece = new Piece(this.ctx);
+    }
+  }
+
+
 }

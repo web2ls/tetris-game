@@ -1,15 +1,41 @@
 class Piece {
   constructor(ctx) {
     this.ctx = ctx;
-    this.color = 'blue';
-    this.shape = [
-      [2, 0, 0],
-      [2, 2, 2],
-      [0, 0, 0]
-    ];
+    this.prevTetronimo = [];
+
+    const typeId = this.randomizeTetrominoType(COLORS.length);
+    this.shape = SHAPES[typeId];
+    this.color = COLORS[typeId];
 
     this.x = 3;
     this.y = 0;
+  }
+
+  randomizeTetrominoType(noOfTypes) {
+    let value = Math.floor(Math.random() * noOfTypes);
+    if (!this.prevTetronimo.includes(value)) {
+      if (this.prevTetronimo.length > 4) {
+        this.prevTetronimo.shift();
+      }
+
+      this.prevTetronimo.push(value);
+      return value;
+    } else {
+      for (let i = 0; i < 4; i++) {
+        value = Math.floor(Math.random() * noOfTypes);
+        if (!this.prevTetronimo.includes(value)) {
+          if (this.prevTetronimo.length > 4) {
+            this.prevTetronimo.shift();
+          }
+
+          this.prevTetronimo.push(value);
+          return value;
+        }
+
+        return value;
+      }
+    }
+    return Math.floor(Math.random() * noOfTypes);
   }
 
   draw() {
