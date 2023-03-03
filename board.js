@@ -1,12 +1,28 @@
 class Board {
-  constructor(ctx) {
+  constructor(ctx, ctxNext) {
     this.ctx = ctx;
+    this.ctxNext = ctxNext;
     this.grid = this.getEmptyBoard();
-    this.piece = new Piece(ctx);
+    this.setNextPiece();
+    this.setCurrentPiece();
   }
 
   getEmptyBoard() {
     return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  }
+
+  setNextPiece() {
+    const { width, height } = this.ctxNext.canvas;
+    this.nextPiece = new Piece(this.ctxNext);
+    this.ctxNext.clearRect(0, 0, width, height);
+    this.nextPiece.draw();
+  }
+
+  setCurrentPiece() {
+    this.piece = this.nextPiece;
+    this.piece.ctx = this.ctx;
+    this.piece.x = 3;
+    this.setNextPiece();
   }
 
   rotate(p) {
@@ -56,7 +72,6 @@ class Board {
         }
       });
     });
-    console.table(this.grid);
   }
 
   draw() {
@@ -71,16 +86,28 @@ class Board {
   }
 
   clearLines() {
+    let lines = 0;
     this.grid.forEach((row, y) => {
-      // If every value is greater than zero then we have a full row.  
-      if (row.every(value => value > 0)) {
-        // Remove the row.  
+      if (row.every(value => value !== 0)) {
+        lines++; // Increase for cleared line
         this.grid.splice(y, 1);
-
-        // Add zero-filled row at the top.   
         this.grid.unshift(Array(COLS).fill(0));
       }
     });
+
+    if (lines > 0) {
+      // Add points if we cleared some lines  
+      account.score += this.getLineClearPoints(lines);
+      account.lines += lines;
+
+      if (account.lines >= LINES_PER_LEVEL) {
+        account.level++;
+
+        account.lines -= LINES_PER_LEVEL;
+
+        time.level = LEVEL[account.level];
+      }
+    }
   }
 
   drop() {
@@ -97,9 +124,20 @@ class Board {
         return false;
       }
 
-      this.piece = new Piece(this.ctx);
+      this.setCurrentPiece();
     }
 
     return true;
+  }
+
+  getLineClearPoints(lines) {
+    const lineClearPoints =
+      lines === 1 ? POINTS.SINGLE :
+        lines === 2 ? POINTS.DOUBLE :
+          lines === 3 ? POINTS.TRIPLE :
+            lines === 4 ? POINTS.TETRIS :
+              0;
+
+    return (account.level + 1) * lineClearPoints;
   }
 }
