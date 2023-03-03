@@ -70,6 +70,19 @@ class Board {
     });
   }
 
+  clearLines() {
+    this.grid.forEach((row, y) => {
+      // If every value is greater than zero then we have a full row.  
+      if (row.every(value => value > 0)) {
+        // Remove the row.  
+        this.grid.splice(y, 1);
+
+        // Add zero-filled row at the top.   
+        this.grid.unshift(Array(COLS).fill(0));
+      }
+    });
+  }
+
   drop() {
     let p = moves[KEY.DOWN](this.piece);
 
@@ -77,9 +90,16 @@ class Board {
       this.piece.move(p);
     } else {
       this.freeze();
+
+      this.clearLines();
+
+      if (this.piece.y === 0) { // Game over
+        return false;
+      }
+
       this.piece = new Piece(this.ctx);
     }
+
+    return true;
   }
-
-
 }
